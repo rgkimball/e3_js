@@ -1,7 +1,7 @@
 /**
  * @file
  * A JavaScript file for the theme.
- * Requires jQuery and Underscore.js libraries
+ * Requires jQuery and Underscore.js
  */
 
 // JavaScript should be made compatible with libraries other than jQuery by
@@ -9,8 +9,7 @@
 // - http://drupal.org/node/1446420
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 
-// Precede self-calling function with a ; to prevent concatenation errors
-;(function ($, Drupal, window, document, undefined) {
+;!function ($, Drupal, window, document, undefined) {
 
 	var $win,
 		$doc,
@@ -27,7 +26,7 @@
 		bpdesktop = breakpoints[2],
 		bphuge = breakpoints[3];
 
-	var General = {
+	var E3 = {
 
 		// Populate this object with general event-based functions
 		// This prevents bogging down the page with multiple function calls
@@ -35,7 +34,7 @@
 
 		pageLoad: {
 			// Leave this empty; we call each function in this object once per page load
-			// Add to it below with General.pageLoad.myFunction
+			// Add to it below with E3.pageLoad.myFunction
 		},
 
 		handleClick: function(element) {
@@ -65,7 +64,7 @@
 		handleScroll: function(distance) {
 
 			if(distance > $('header').offset().top) {
-				console.log('Do something');
+				console.log('Scrolled '+distance+'px');
 			}
 
 		},
@@ -75,7 +74,7 @@
 		}
 	};
 
-	General.pageLoad.exampleFunc = function() {
+	E3.pageLoad.exampleFunc = function() {
 		console.log('Page is loaded');
 	};
 
@@ -83,33 +82,33 @@
 
 		// Nothing here should need to be changed; add functionality above
 
-		(function() {
+		!function() {
 			var func;
 
-			for (func in General.pageLoad) {
-				if ( _.isFunction(General.pageLoad[func]) ) {
-					(_.once(General.pageLoad[func]))();
-					console.log('Called function: General.pageLoad.'+func);
+			for (func in E3.pageLoad) {
+				if ( _.isFunction(E3.pageLoad[func]) ) {
+					(_.once(E3.pageLoad[func]))();
+					console.log('Called function: E3.pageLoad.'+func);
 				}
 			}
-		})(); // Runs all pageLoad functions once
+		}(); // Runs all pageLoad functions once
 
 		$win.click(
 			_.throttle((function(e) {
-				General.handleClick(e.toElement);
+				E3.handleClick(e.toElement);
 			}), 100)
 		);
 
 		$win.resize(
 			_.throttle((function() {
-				General.handleResize($win.width());
-			}), 100)
+				E3.handleResize($win.width());
+			}), 250)
 		);
 
 		$win.scroll(
-			_.throttle((function() {
-				General.handleScroll($win.scrollTop());
-			}), 100)
+			_.throttle(!function() {
+				E3.handleScroll($win.scrollTop());
+			}, 150)
 		);
 		
 		$win.startTime = (new Date).getTime();
@@ -119,10 +118,10 @@
 		function callTime() {
 	
 			$win.time = ((new Date).getTime() - $win.startTime)/1000;
-			General.handleDelay(Math.round($win.time));
+			E3.handleDelay(Math.round($win.time));
 	
 		}
 
 	});
 
-})(jQuery, Drupal, this, this.document);
+}(jQuery, Drupal, this, this.document);
