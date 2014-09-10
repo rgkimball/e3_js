@@ -14,35 +14,29 @@
 		// These should match whatever is defined in _base.scss:
 		breakpoints: [460,768,960,1280],
 
-		// Shortcut variables
-//		bpmobile  : Drupal.E3.breakpoints[0],
-//		bptablet  : Drupal.E3.breakpoints[1],
-//		bpdesktop : Drupal.E3.breakpoints[2],
-//		bphuge    : Drupal.E3.breakpoints[3],
-
 		// Populate this object with general event-based functions
 		// This prevents bogging down the page with multiple function calls
 		// and other mistakes, like having multiple resize handlers
 
-		pageLoad: {
+		load: {
 			// Leave this empty; we call each function in this object once per page load
-			// Add to it below with Drupal.E3.pageLoad.myFunction
+			// Add to it below with Drupal.E3.load.myFunction
 		},
 
-		handleClick: function(element) {
-
-		}, // end handleClick
-
-		handleResize: function(width) {
-
-		}, // end handleResize
-
-		handleScroll: function(distance) {
+		click: function(element) {
 
 		},
 
-		handleDelay: function(time) {
-			// See pageLoad.timerInit
+		resize: function(width) {
+
+		},
+
+		scroll: function(distance) {
+
+		},
+
+		delay: function(time) {
+			// See load.timerInit
 		}
 	};
 
@@ -53,20 +47,32 @@
 
 		!function() {
 			var func;
-			for (func in Drupal.E3.pageLoad) {
-				if ( _.isFunction(Drupal.E3.pageLoad[func]) ) {
-					(_.once(Drupal.E3.pageLoad[func]))();
+			for (func in Drupal.E3.load) {
+				if ( _.isFunction(Drupal.E3.load[func]) ) {
+					(_.once(Drupal.E3.load[func]))();
 				}
 			}
-		}(); // Runs all pageLoad functions once
+			for (func in Drupal.E3.resize) {
+				if ( _.isFunction(Drupal.E3.resize[func]) ) {
+					Drupal.E3.resize[func](Drupal.E3.win.resize());
+				}
+			}
+			for (func in Drupal.E3.scroll) {
+				if ( _.isFunction(Drupal.E3.scroll[func]) ) {
+					Drupal.E3.scroll[func](Drupal.E3.win.scrollTop());
+				}
+			}
+		}(); // Runs all load, resize and scroll functions once
+
+
 
 		Drupal.E3.win.click(
 			_.throttle((function(e) {
 				!function() {
 					var func;
-					for (func in Drupal.E3.handleClick) {
-						if ( _.isFunction(Drupal.E3.handleClick[func]) ) {
-							Drupal.E3.handleClick[func](e.toElement);
+					for (func in Drupal.E3.click) {
+						if ( _.isFunction(Drupal.E3.click[func]) ) {
+							Drupal.E3.click[func](e.toElement);
 						}
 					}
 				}();
@@ -77,9 +83,9 @@
 			_.throttle((function() {
 				!function() {
 					var func;
-					for (func in Drupal.E3.handleClick) {
-						if ( _.isFunction(Drupal.E3.handleClick[func]) ) {
-							Drupal.E3.handleClick[func](Drupal.E3.win.width());
+					for (func in Drupal.E3.resize) {
+						if ( _.isFunction(Drupal.E3.resize[func]) ) {
+							Drupal.E3.resize[func](Drupal.E3.win.resize());
 						}
 					}
 				}();
@@ -90,9 +96,9 @@
 			_.throttle((function() {
 				!function() {
 					var func;
-					for (func in Drupal.E3.handleClick) {
-						if ( _.isFunction(Drupal.E3.handleClick[func]) ) {
-							Drupal.E3.handleClick[func](Drupal.E3.win.scrollTop());
+					for (func in Drupal.E3.scroll) {
+						if ( _.isFunction(Drupal.E3.scroll[func]) ) {
+							Drupal.E3.scroll[func](Drupal.E3.win.scrollTop());
 						}
 					}
 				}();

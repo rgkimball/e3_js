@@ -7,7 +7,7 @@ A template for a better Drupal utils file
 
 Once this module is enabled, simply add a new script with the structure demonstrated in ```module_js.js.example```, then use ```drupal_add_js()``` to add your new script. For example:
 
-**my_hook/my_hook.module***
+**my_hook/my_hook.module**
 
 ```
 function my_hook_init() {
@@ -16,20 +16,20 @@ function my_hook_init() {
 }
 ```
 
-**my_hook/js/my_script.js***
+**my_hook/js/my_script.js**
 
 ```
-;!function ($, Drupal, window, document, undefined) {
+;!function ($, Drupal, e3, window, document, undefined) {
 
 
-	Drupal.E3.pageLoad.example = function() {
+	e3.load.example = function() {
 		console.log('Example module loaded');
 	}
 	
-	Drupal.E3.handleResize.example = function(Drupal.E3.win.width()) {
+	e3.resize.example = function(e3.win.width()) {
 		console.log('Do something on resize');
 	}
 
 
-}(jQuery, Drupal, this, this.document);
+}(jQuery, Drupal, Drupal.E3, this, this.document);
 ```
