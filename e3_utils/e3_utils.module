@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Implements hook_init()
+ */
+function e3_utils_init() {
+	$js_path = drupal_get_path('module', 'e3_utils') . '/e3_utils.js';
+	drupal_add_js($js_path, array('scope' => 'header', 'preprocess' => false), 'setting');
+}
