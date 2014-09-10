@@ -1,0 +1,10 @@
+;!function ($, Drupal, window, document, undefined) {
+
+
+	Drupal.E3.pageLoad.example = function() {
+		console.log('Example module loaded');
+		console.log(Drupal.E3.breakpoints);
+	}
+
+
+}(jQuery, Drupal, this, this.document);
