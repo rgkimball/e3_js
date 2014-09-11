@@ -22,21 +22,34 @@
 			// Add to it below with Drupal.E3.load.myFunction
 		},
 
-		click: function(element) {
+		click: function(element) {},
 
+		resize: function(width, height) {},
+
+		scroll: function(distance) {},
+
+		delay: function(time) {},
+
+		// Helper functions
+		checkUrl: function(string) {
+			if (window.location.href.indexOf(string) > -1) {
+				return true;
+			} else {
+				return false;
+			}
 		},
 
-		resize: function(width, height) {
-
-		},
-
-		scroll: function(distance) {
-
-		},
-
-		delay: function(time) {
-			// See load.timerInit
+		getQuery: function() {
+			var vars = [], hash;
+			var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+			for(var i = 0; i < hashes.length; i++) {
+				hash = hashes[i].split('=');
+				vars.push(hash[0]);
+				vars[hash[0]] = hash[1];
+			}
+			return vars;
 		}
+
 	};
 
 	// Shortcut vars
@@ -45,7 +58,8 @@
 	Drupal.E3.bpdesktop = Drupal.E3.breakpoints[2];
 	Drupal.E3.bphuge    = Drupal.E3.breakpoints[3];
 
-	Drupal.E3.load.timer = function(t) {
+	Drupal.E3.load.timerInit = function(t) {
+
 		Drupal.E3.startTime = (new Date).getTime();
 		setInterval(Drupal.E3.getTime,1000);
 		Drupal.E3.timer = true;
