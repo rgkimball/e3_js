@@ -2,7 +2,6 @@
 // wrapping it with an "anonymous closure". See:
 // - http://drupal.org/node/1446420
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
-
 // Precede IIFEs with a ; to prevent concatenation errors
 ;!function ($, Drupal, window, document, undefined) {
 
@@ -40,23 +39,29 @@
 		}
 	};
 
+	// Shortcut vars
+	Drupal.E3.bpmobile  = Drupal.E3.breakpoints[0];
+	Drupal.E3.bptablet  = Drupal.E3.breakpoints[1];
+	Drupal.E3.bpdesktop = Drupal.E3.breakpoints[2];
+	Drupal.E3.bphuge    = Drupal.E3.breakpoints[3];
+
 	Drupal.E3.load.timer = function(t) {
 		Drupal.E3.startTime = (new Date).getTime();
-		Drupal.E3.timer == true;
+		setInterval(Drupal.E3.getTime,1000);
+		Drupal.E3.timer = true;
 
-		function getTime() {
-			if(Drupal.E3.timer) {
-				Drupal.E3.time = Math.round(((new Date).getTime() - Drupal.E3.startTime)/1000,2);
-//			var func;
-//			for (func in Drupal.E3.delay) {
-//				if ( _.isFunction(Drupal.E3.delay[func]) ) {
-//					Drupal.E3.delay[func](Drupal.E3.time);
-//				}
-//			}
-				console.log('Page loaded '+Drupal.E3.time+'s ago');
+		Drupal.E3.getTime = function() {
+			if(Drupal.E3.timer == true) {
+				Drupal.E3.time = (((new Date).getTime() - Drupal.E3.startTime)/1000).toFixed(20);
+				var func;
+				for (func in Drupal.E3.delay) {
+					if ( _.isFunction(Drupal.E3.delay[func]) ) {
+						Drupal.E3.delay[func](Drupal.E3.time);
+					}
+				}
 			}
 		}
-		setInterval(getTime,1000);
+
 	};
 
 	Drupal.E3.doc.ready(function() {
@@ -73,17 +78,10 @@
 			}
 			for (func in Drupal.E3.resize) {
 				if ( _.isFunction(Drupal.E3.resize[func]) ) {
-					Drupal.E3.resize[func](Drupal.E3.win.width(),Drupal.E3.win.height());
-				}
-			}
-			for (func in Drupal.E3.scroll) {
-				if ( _.isFunction(Drupal.E3.scroll[func]) ) {
-					Drupal.E3.scroll[func](Drupal.E3.win.scrollTop());
+					(_.once(Drupal.E3.resize[func]))(Drupal.E3.win.width(),Drupal.E3.win.height());
 				}
 			}
 		}(); // Runs all load, resize and scroll functions once
-
-
 
 		Drupal.E3.win.click(
 			_.throttle((function(e) {
