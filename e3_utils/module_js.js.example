@@ -1,9 +1,0 @@
-;!function ($, Drupal, e3, window, document, undefined) {
-
-
-  e3.load.example = function() {
-    console.log('Example module loaded');
-  }
-
-
-}(jQuery, Drupal, Drupal.E3, this, this.document);

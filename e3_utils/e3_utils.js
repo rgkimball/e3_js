@@ -3,7 +3,7 @@
 // - http://drupal.org/node/1446420
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
 
-// Precede self-calling function with a ; to prevent concatenation errors
+// Precede IIFEs with a ; to prevent concatenation errors
 ;!function ($, Drupal, window, document, undefined) {
 
 	Drupal.E3 = {
@@ -27,7 +27,7 @@
 
 		},
 
-		resize: function(width) {
+		resize: function(width, height) {
 
 		},
 
@@ -38,6 +38,25 @@
 		delay: function(time) {
 			// See load.timerInit
 		}
+	};
+
+	Drupal.E3.load.timer = function(t) {
+		Drupal.E3.startTime = (new Date).getTime();
+		Drupal.E3.timer == true;
+
+		function getTime() {
+			if(Drupal.E3.timer) {
+				Drupal.E3.time = Math.round(((new Date).getTime() - Drupal.E3.startTime)/1000,2);
+//			var func;
+//			for (func in Drupal.E3.delay) {
+//				if ( _.isFunction(Drupal.E3.delay[func]) ) {
+//					Drupal.E3.delay[func](Drupal.E3.time);
+//				}
+//			}
+				console.log('Page loaded '+Drupal.E3.time+'s ago');
+			}
+		}
+		setInterval(getTime,1000);
 	};
 
 	Drupal.E3.doc.ready(function() {
@@ -54,7 +73,7 @@
 			}
 			for (func in Drupal.E3.resize) {
 				if ( _.isFunction(Drupal.E3.resize[func]) ) {
-					Drupal.E3.resize[func](Drupal.E3.win.resize());
+					Drupal.E3.resize[func](Drupal.E3.win.width(),Drupal.E3.win.height());
 				}
 			}
 			for (func in Drupal.E3.scroll) {
@@ -85,11 +104,11 @@
 					var func;
 					for (func in Drupal.E3.resize) {
 						if ( _.isFunction(Drupal.E3.resize[func]) ) {
-							Drupal.E3.resize[func](Drupal.E3.win.resize());
+							Drupal.E3.resize[func](Drupal.E3.win.width(),Drupal.E3.win.height());
 						}
 					}
 				}();
-			}), 100)
+			}), 250)
 		);
 
 		Drupal.E3.win.scroll(
@@ -102,7 +121,7 @@
 						}
 					}
 				}();
-			}), 100)
+			}), 200)
 		);
 
 	});
