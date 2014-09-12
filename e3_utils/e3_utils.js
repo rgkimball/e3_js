@@ -32,11 +32,7 @@
 
 		// Helper functions
 		checkUrl: function(string) {
-			if (window.location.href.indexOf(string) > -1) {
-				return true;
-			} else {
-				return false;
-			}
+			return window.location.href.indexOf(string) > -1;
 		},
 
 		getQuery: function() {
@@ -58,7 +54,7 @@
 	Drupal.E3.bpdesktop = Drupal.E3.breakpoints[2];
 	Drupal.E3.bphuge    = Drupal.E3.breakpoints[3];
 
-	Drupal.E3.load.timerInit = function(t) {
+	Drupal.E3.load.timerInit = function() {
 
 		Drupal.E3.startTime = (new Date).getTime();
 		setInterval(Drupal.E3.getTime,1000);
@@ -67,8 +63,7 @@
 		Drupal.E3.getTime = function() {
 			if(Drupal.E3.timer == true) {
 				Drupal.E3.time = (((new Date).getTime() - Drupal.E3.startTime)/1000).toFixed(20);
-				var func;
-				for (func in Drupal.E3.delay) {
+				for (var func in Drupal.E3.delay) {
 					if ( _.isFunction(Drupal.E3.delay[func]) ) {
 						Drupal.E3.delay[func](Drupal.E3.time);
 					}
@@ -84,8 +79,7 @@
 		// prefixed with the Drupal object
 
 		!function() {
-			var func;
-			for (func in Drupal.E3.load) {
+			for (var func in Drupal.E3.load) {
 				if ( _.isFunction(Drupal.E3.load[func]) ) {
 					(_.once(Drupal.E3.load[func]))();
 				}
@@ -100,8 +94,7 @@
 		Drupal.E3.win.click(
 			_.throttle((function(e) {
 				!function() {
-					var func;
-					for (func in Drupal.E3.click) {
+					for (var func in Drupal.E3.click) {
 						if ( _.isFunction(Drupal.E3.click[func]) ) {
 							Drupal.E3.click[func](e.toElement);
 						}
@@ -113,8 +106,7 @@
 		Drupal.E3.win.resize(
 			_.throttle((function() {
 				!function() {
-					var func;
-					for (func in Drupal.E3.resize) {
+					for (var func in Drupal.E3.resize) {
 						if ( _.isFunction(Drupal.E3.resize[func]) ) {
 							Drupal.E3.resize[func](Drupal.E3.win.width(),Drupal.E3.win.height());
 						}
@@ -126,8 +118,7 @@
 		Drupal.E3.win.scroll(
 			_.throttle((function() {
 				!function() {
-					var func;
-					for (func in Drupal.E3.scroll) {
+					for (var func in Drupal.E3.scroll) {
 						if ( _.isFunction(Drupal.E3.scroll[func]) ) {
 							Drupal.E3.scroll[func](Drupal.E3.win.scrollTop());
 						}
@@ -135,7 +126,5 @@
 				}();
 			}), 200)
 		);
-
 	});
-
 }(jQuery, Drupal, this, this.document);
