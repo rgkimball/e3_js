@@ -5,7 +5,7 @@
 // Precede IIFEs with a ; to prevent concatenation errors
 ;!function ($, Drupal, window, document, undefined) {
 
-	Drupal.E3 = {
+	window.e3 = {
 
 		win: $(window),
 		doc: $(document),
@@ -19,7 +19,7 @@
 
 		load: {
 			// Leave this empty; we call each function in this object once per page load
-			// Add to it below with Drupal.E3.load.myFunction
+			// Add to it below with e3.load.myFunction
 		},
 
 		click: function(element) {},
@@ -49,78 +49,77 @@
 	};
 
 	// Shortcut vars
-	Drupal.E3.bpmobile  = Drupal.E3.breakpoints[0];
-	Drupal.E3.bptablet  = Drupal.E3.breakpoints[1];
-	Drupal.E3.bpdesktop = Drupal.E3.breakpoints[2];
-	Drupal.E3.bphuge    = Drupal.E3.breakpoints[3];
+	e3.bpmobile  = e3.breakpoints[0];
+	e3.bptablet  = e3.breakpoints[1];
+	e3.bpdesktop = e3.breakpoints[2];
+	e3.bphuge    = e3.breakpoints[3];
 
-	Drupal.E3.load.timerInit = function() {
+	e3.load.timerInit = function() {
+		e3.startTime = (new Date).getTime();
+		e3.timer = true;
 
-		Drupal.E3.startTime = (new Date).getTime();
-		setInterval(Drupal.E3.getTime,1000);
-		Drupal.E3.timer = true;
-
-		Drupal.E3.getTime = function() {
-			if(Drupal.E3.timer == true) {
-				Drupal.E3.time = (((new Date).getTime() - Drupal.E3.startTime)/1000).toFixed(20);
-				for (var func in Drupal.E3.delay) {
-					if ( _.isFunction(Drupal.E3.delay[func]) ) {
-						Drupal.E3.delay[func](Drupal.E3.time);
+		e3.getTime = function() {
+			if(e3.timer == true) {
+				e3.time = (((new Date).getTime() - e3.startTime)/1000).toFixed(20);
+				for (var func in e3.delay) {
+					if ( _.isFunction(e3.delay[func]) ) {
+						e3.delay[func](e3.time);
 					}
 				}
 			}
 		}
 
+		setInterval(e3.getTime,1000);
 	};
 
-	Drupal.E3.doc.ready(function() {
+	e3.doc.ready(function() {
 
 		// Nothing here should need to be changed; add functionality in new files
 		// prefixed with the Drupal object
 
 		!function() {
-			for (var func in Drupal.E3.load) {
-				if ( _.isFunction(Drupal.E3.load[func]) ) {
-					(_.once(Drupal.E3.load[func]))();
+			for (var func in e3.load) {
+				if ( _.isFunction(e3.load[func]) ) {
+					(_.once(e3.load[func]))();
 				}
 			}
-			for (func in Drupal.E3.resize) {
-				if ( _.isFunction(Drupal.E3.resize[func]) ) {
-					(_.once(Drupal.E3.resize[func]))(Drupal.E3.win.width(),Drupal.E3.win.height());
+			for (func in e3.resize) {
+				if ( _.isFunction(e3.resize[func]) ) {
+					(_.once(e3.resize[func]))(e3.win.width(),e3.win.height());
 				}
 			}
 		}(); // Runs all load, resize and scroll functions once
 
-		Drupal.E3.win.click(
+		e3.win.click(
 			_.throttle((function(e) {
 				!function() {
-					for (var func in Drupal.E3.click) {
-						if ( _.isFunction(Drupal.E3.click[func]) ) {
-							Drupal.E3.click[func](e.toElement);
+					for (var func in e3.click) {
+						if ( _.isFunction(e3.click[func]) ) {
+							e3.click[func](e.toElement,e);
 						}
 					}
 				}();
 			}), 100)
 		);
 
-		Drupal.E3.win.resize(
+		e3.win.resize(
 			_.throttle((function() {
 				!function() {
-					for (var func in Drupal.E3.resize) {
-						if ( _.isFunction(Drupal.E3.resize[func]) ) {
-							Drupal.E3.resize[func](Drupal.E3.win.width(),Drupal.E3.win.height());
+					for (var func in e3.resize) {
+						if ( _.isFunction(e3.resize[func]) ) {
+							e3.resize[func](e3.win.width(),e3.win.height());
 						}
 					}
 				}();
 			}), 250)
 		);
 
-		Drupal.E3.win.scroll(
+		e3.win.scroll(
 			_.throttle((function() {
 				!function() {
-					for (var func in Drupal.E3.scroll) {
-						if ( _.isFunction(Drupal.E3.scroll[func]) ) {
-							Drupal.E3.scroll[func](Drupal.E3.win.scrollTop());
+					for (var func in e3.scroll) {
+						if ( _.isFunction(e3.scroll[func]) ) {
+							e3.scroll[func](e3.win.scrollTop());
 						}
 					}
 				}();

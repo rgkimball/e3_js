@@ -1,5 +1,5 @@
-name = E3
-description = Loads e3_utils structure
+name = e3_js
+description = Modular javascript implementation
 core = 7.x
 package = Elevated Third
 version = 0.1.0
