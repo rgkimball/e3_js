@@ -90,4 +90,4 @@
 //	}
 
 
-}(jQuery, Drupal, Drupal.E3, this, this.document, '');
+}(jQuery, Drupal, e3, this, this.document, '');
