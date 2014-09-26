@@ -2,8 +2,10 @@
 // wrapping it with an "anonymous closure". See:
 // - http://drupal.org/node/1446420
 // - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
-// Precede IIFEs with a ; to prevent concatenation errors
-;!function ($, Drupal, window, document, undefined) {
+
+// Precede IIFEs with a ! to prevent concatenation errors;
+// this simplifies ;(function(){})(); to !function(){}()
+!function ($, Drupal, window, document, undefined) {
 
 	window.e3 = {
 
@@ -21,6 +23,8 @@
 			// Leave this empty; we call each function in this object once per page load
 			// Add to it below with e3.load.myFunction
 		},
+
+		behaviors: {},
 
 		click: function(element) {},
 
@@ -126,4 +130,18 @@
 			}), 200)
 		);
 	});
+
+  Drupal.behaviors.e3 = {
+    attach: function(settings, context) {
+      console.log(context);
+      !function() {
+        for (var func in e3.behaviors) {
+          if ( _.isFunction(e3.behaviors[func]) ) {
+            (e3.behaviors[func])(settings,context);
+          }
+        }
+      }(); // Runs all load, resize and scroll functions once
+    }
+  };
+
 }(jQuery, Drupal, this, this.document);

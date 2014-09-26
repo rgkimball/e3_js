@@ -10,6 +10,16 @@
 		console.log('utils_example module js loaded');
 	}
 
+  /** This works exactly like Drupal.behaviors - in fact, it's wrapped in a
+   *  behaviors object. It is passed the settings and context variables by
+   *  default, and will be called on page load and on AJAX calls. If you have
+   *  functionality in an AJAX view, for example, use e3.behaviors to make sure
+   *  that script is loaded on AJAX calls as well, instead of _.once on page load
+   */
+  e3.behaviors.example = function(s,c) {
+    console.log('utils_example behavior');
+  }
+
 	/** The click handler listens to (and throttles) all click events on the page.
 	 *  By default, it is passed the HTML of the element clicked, allowing you to
 	 *  perform any standard jQuery operations on it. In the example below, clicking
