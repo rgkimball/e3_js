@@ -133,7 +133,6 @@
 
   Drupal.behaviors.e3 = {
     attach: function(settings, context) {
-      console.log(context);
       !function() {
         for (var func in e3.behaviors) {
           if ( _.isFunction(e3.behaviors[func]) ) {
