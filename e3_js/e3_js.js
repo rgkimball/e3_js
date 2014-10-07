@@ -44,7 +44,7 @@
         return false;
       } else {
         if (args[check] == "") {
-          return "/"; // expected behavior for users of Drupal's arg()
+          return "front"; // expected behavior for users of Drupal's arg()
         } else {
           return args[check];
         }
@@ -53,13 +53,11 @@
 
     getUrl: function() {
       // Turns items of the URL into an array
-      var vars = [], hash;
-      var hashes = window.location.href.split('?')[0].split('/');
-      for (var i = 0; i < hashes.length; i++) {
+      var vars = [],
+       args = window.location.href.split('?')[0].split('/');
+      for (var i = 0; i < args.length; i++) {
         if(i > 2) {
-          hash = hashes[i].split('=');
-          vars.push(hash[0]);
-          vars[hash[0]] = hash[1];
+          vars.push(args[i]);
         }
       }
       return vars;
@@ -169,7 +167,7 @@
             (e3.behaviors[func])(settings,context);
           }
         }
-      }(); // Runs all load, resize and scroll functions once
+      }();
     }
   };
 
