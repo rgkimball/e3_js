@@ -19,13 +19,13 @@ function my_hook_init() {
 **my_hook/js/my_script.js**
 
 ```
-;!function ($, Drupal, e3, window, document, undefined) {
+!function ($, Drupal, e3, window, document, undefined) {
 
 
 	e3.load.example = function() {
 		console.log('Example module loaded');
 		
-		if(e3.checkURL("blog") {
+		if(e3.arg(0) == 'blog') {
 			console.log('Do something on blog pages.');
 		}
 	}
@@ -37,3 +37,5 @@ function my_hook_init() {
 
 }(jQuery, Drupal, Drupal.E3, this, this.document);
 ```
+
+See utils_example/myscript.js for a more in depth demonstration of usage.
