@@ -9,6 +9,8 @@
 
   window.e3 = {
 
+    version: '0.2.0',
+
     win: $(window),
     doc: $(document),
 
