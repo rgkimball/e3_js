@@ -25,7 +25,7 @@ function e3_js_init() {
     $script = 'e3_js.min.js';
   }
 
-  if (!path_is_admin(current_path())) {
+  if (arg(0) != 'admin') {
 
     $js_path = drupal_get_path('module', 'e3_js') . '/' . $script;
 

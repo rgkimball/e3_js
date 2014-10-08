@@ -2,7 +2,7 @@ name = e3_js
 description = Modular javascript implementation
 core = 7.x
 package = Elevated Third
-version = 0.2.0
+version = 0.2.1
 
 dependencies[] = libraries
 dependencies[] = underscore
