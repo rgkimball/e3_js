@@ -1,10 +1,18 @@
-// JavaScript should be made compatible with libraries other than jQuery by
-// wrapping it with an "anonymous closure". See:
-// - http://drupal.org/node/1446420
-// - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
+/**
+ * @file e3_js.js
+ *
+ * @author rgkimball
+ * @see https://github.com/rgkimball/e3_js for documentation and usage
+ *
+ * JavaScript should be made compatible with libraries other than jQuery by
+ * wrapping it with an "anonymous closure". See:
+ * - http://drupal.org/node/1446420
+ * - http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth
+ *
+ * Precede IIFEs with a ! to prevent file concatenation errors;
+ * this simplifies ;(function(){})(); to !function(){}()
+ */
 
-// Precede IIFEs with a ! to prevent concatenation errors;
-// this simplifies ;(function(){})(); to !function(){}()
 !function ($, Drupal, window, document, undefined) {
 
   window.e3 = {

@@ -10,6 +10,7 @@
  */
 function e3_js_init() {
 
+  // Decide whether to use the production version.
   if($env = variable_get('e3_js_prod', '0')) {
     switch($env) {
       case 0:
@@ -25,7 +26,8 @@ function e3_js_init() {
     $script = 'e3_js.min.js';
   }
 
-  if (arg(0) != 'admin') {
+  // If not configured otherwise, only load script on front-end pages
+  if (variable_get('e3_js_admin') || arg(0) != 'admin') {
 
     $js_path = drupal_get_path('module', 'e3_js') . '/' . $script;
 
@@ -55,7 +57,7 @@ function e3_js_menu(){
   $items = array();
 
   $items['admin/config/development/e3js'] = array(
-    'title' => 'E3 JS Settings',
+    'title' => 'e3_js',
     'description' => 'Configuration for the e3_js library.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('e3_js_admin_form'),
@@ -70,10 +72,21 @@ function e3_js_menu(){
  * @return mixed
  */
 function e3_js_admin_form() {
+  $form['header'] = array(
+    '#markup' => '<div style="padding:10px;border:1px solid #BEBFB9;margin-bottom:10px;"><p>This module loads the e3_js.js structure for modular javascript development into Drupal. For more information about implementation and usage, see the <a href="https://github.com/rgkimball/e3_js" target="_blank">e3_js GitHub repository</a>.</p></div>',
+  );
+
   $form['e3_js_prod'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use minified js'),
+    '#description' => t('If unchecked, the unminified version will be loaded to allow debugging. It is recommended to define this in settings.php to automatically configure site environments appropriately.'),
     '#default_value' => variable_get('e3_js_prod', 0),
+  );
+  $form['e3_js_admin'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Load on admin pages.'),
+    '#default_value' => variable_get('e3_js_admin', 0),
+    '#description' => t('If checked, e3_js will be added to admin pages as well.')
   );
 
   return system_settings_form($form);
