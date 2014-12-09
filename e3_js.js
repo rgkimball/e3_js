@@ -45,26 +45,22 @@
     delay: function(time) {},
 
     // Helper functions
-    arg: function(int) {
-      // Works like Drupal's arg() in bootstrap.inc
+    url: function(int) {
+      // Works like Drupal's arg(), but gets path arguments instead
       // used to check if an argument is part of the URL, eg. arg(0) == 'front'
-      var args = window.location.href.split('?')[0].split('/');
+      var args = window.location.href.split('?')[0].split('#')[0].split('/');
       var check = int + 3; // assumes :// is in url, so first 3 items irrelevant
       if (typeof args[check] == 'undefined') {
         return false;
       } else {
-        if (args[check] == "") {
-          return "front"; // expected behavior for users of Drupal's arg()
-        } else {
-          return args[check];
-        }
+        return args[check];
       }
     },
 
     getUrl: function() {
       // Turns items of the URL into an array
       var vars = [],
-       args = window.location.href.split('?')[0].split('/');
+        args = window.location.href.split('?')[0].split('/');
       for (var i = 0; i < args.length; i++) {
         if(i > 2) {
           vars.push(args[i]);
@@ -113,6 +109,13 @@
 
     setInterval(e3.getTime,1000);
   };
+
+  // Acquire contextual objects from Drupal.settings.e3
+  e3.load.init = function() {
+    if (!!Drupal.settings.e3) {
+      $.extend(e3, Drupal.settings.e3);
+    }
+  }
 
   e3.doc.ready(function() {
 

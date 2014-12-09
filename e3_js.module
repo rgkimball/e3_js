@@ -47,6 +47,10 @@ function e3_js_init() {
       ), 'setting'
     );
 
+    // Adds content of arg to e3 object.
+    drupal_add_js(array('e3' => array('arg' => arg())),
+      array('type' => 'setting'));
+
   }
 }
 
@@ -90,4 +94,15 @@ function e3_js_admin_form() {
   );
 
   return system_settings_form($form);
+}
+
+/**
+ *  Implements hook_block_view_alter().
+ *   Send block IDs to js for contextual operations.
+ */
+function e3_js_block_view_alter(&$data, $block) {
+
+  drupal_add_js(array('e3' => array('blocks' => array("$block->bid"))),
+    array('type' => 'setting'));
+
 }
