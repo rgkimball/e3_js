@@ -84,7 +84,20 @@
       }
     },
 
-    isFuncof: function(func, parent) {
+    // On the passed object, call each of its own functions.
+    callEach: function(bundle) {
+      for (func in bundle) {
+        if (bundle.hasOwnProperty(func)) {
+          if (e3.isFuncOf(func, bundle)) {
+            var args = [].slice.call(arguments,1);
+            bundle[func].apply(args);
+          }
+        }
+      }
+    },
+
+    // _.isFunction wrapper
+    isFuncOf: function(func, parent) {
       return _.isFunction(parent[func]);
     }
   };
@@ -102,11 +115,7 @@
     e3.getTime = function() {
       if(e3.timer == true) {
         e3.time = (((new Date).getTime() - e3.startTime)/1000).toFixed(20);
-        for (var func in e3.delay) {
-          if ( e3.isFuncof(func,e3.delay) ) {
-            e3.delay[func](e3.time);
-          }
-        }
+        e3.callEach(e3.delay, e3.time);
       }
     }
 
@@ -126,64 +135,32 @@
     // prefixed with the Drupal object
 
     !function() {
-      for (var func in e3.load) {
-        if ( e3.isFuncof(func,e3.load) ) {
-          (_.once(e3.load[func]))();
-        }
-      }
-      for (func in e3.resize) {
-        if ( e3.isFuncof(func,e3.resize) ) {
-          (_.once(e3.resize[func]))(e3.win.width(),e3.win.height());
-        }
-      }
+      _.once(e3.callEach(e3.load));
+      _.once(e3.callEach(e3.resize, e3.win.width(), e3.win.height()));
     }(); // Runs all load, resize and scroll functions once
 
     e3.win.click(
       _.throttle((function(e) {
-        !function() {
-          for (var func in e3.click) {
-            if ( e3.isFuncof(func,e3.click) ) {
-              e3.click[func](e.toElement,e);
-            }
-          }
-        }();
+        !function() { e3.callEach(e3.click, e.toElement, e); }();
       }), 100)
     );
 
     e3.win.resize(
       _.throttle((function() {
-        !function() {
-          for (var func in e3.resize) {
-            if ( e3.isFuncof(func,e3.resize) ) {
-              e3.resize[func](e3.win.width(),e3.win.height());
-            }
-          }
-        }();
+        !function() { e3.callEach(e3.resize, e3.win.width(), e3.win.height()); }();
       }), 250)
     );
 
     e3.win.scroll(
       _.throttle((function() {
-        !function() {
-          for (var func in e3.scroll) {
-            if ( e3.isFuncof(func,e3.scroll) ) {
-              e3.scroll[func](e3.win.scrollTop());
-            }
-          }
-        }();
+        !function() { e3.callEach(e3.scroll, e3.win.scrollTop()); }();
       }), 200)
     );
   });
 
   Drupal.behaviors.e3 = {
     attach: function(settings, context) {
-      !function() {
-        for (var func in e3.behaviors) {
-          if ( e3.isFuncof(e3.behaviors[func]) ) {
-            (e3.behaviors[func])(settings,context);
-          }
-        }
-      }();
+      !function() { e3.callEach(e3.behaviors, settings, context); }();
     }
   };
 
