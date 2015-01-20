@@ -1,7 +1,7 @@
 e3_js
 ========
 
-###### Current Version: [``` 0.2.2 ```](https://github.com/rgkimball/e3_js/releases/latest)
+###### Current Version: [``` 0.2.3 ```](https://github.com/rgkimball/e3_js/releases/latest)
 
 
 A module that introduces modular javascript and a toolkit to Drupal. The basic premise of this model is changing the focus of javascript writing from page elements and features to events in an effort to improve performance. For example, rather than introducing a new Drupal.behaviors object for new features, each of which uses jQuery to listen for page resizes and scrolls, new features become a part of one global window resize and scroll resize listener. 

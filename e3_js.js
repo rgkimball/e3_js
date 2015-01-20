@@ -17,7 +17,7 @@
 
   window.e3 = {
 
-    version: '0.2.1',
+    version: '0.2.2',
 
     win: $(window),
     doc: $(document),
@@ -82,8 +82,11 @@
       } else {
         return false;
       }
-    }
+    },
 
+    isFuncof: function(func, parent) {
+      return _.isFunction(parent[func]);
+    }
   };
 
   // Shortcut vars
@@ -100,7 +103,7 @@
       if(e3.timer == true) {
         e3.time = (((new Date).getTime() - e3.startTime)/1000).toFixed(20);
         for (var func in e3.delay) {
-          if ( _.isFunction(e3.delay[func]) ) {
+          if ( e3.isFuncof(func,e3.delay) ) {
             e3.delay[func](e3.time);
           }
         }
@@ -124,12 +127,12 @@
 
     !function() {
       for (var func in e3.load) {
-        if ( _.isFunction(e3.load[func]) ) {
+        if ( e3.isFuncof(func,e3.load) ) {
           (_.once(e3.load[func]))();
         }
       }
       for (func in e3.resize) {
-        if ( _.isFunction(e3.resize[func]) ) {
+        if ( e3.isFuncof(func,e3.resize) ) {
           (_.once(e3.resize[func]))(e3.win.width(),e3.win.height());
         }
       }
@@ -139,7 +142,7 @@
       _.throttle((function(e) {
         !function() {
           for (var func in e3.click) {
-            if ( _.isFunction(e3.click[func]) ) {
+            if ( e3.isFuncof(func,e3.click) ) {
               e3.click[func](e.toElement,e);
             }
           }
@@ -151,7 +154,7 @@
       _.throttle((function() {
         !function() {
           for (var func in e3.resize) {
-            if ( _.isFunction(e3.resize[func]) ) {
+            if ( e3.isFuncof(func,e3.resize) ) {
               e3.resize[func](e3.win.width(),e3.win.height());
             }
           }
@@ -163,7 +166,7 @@
       _.throttle((function() {
         !function() {
           for (var func in e3.scroll) {
-            if ( _.isFunction(e3.scroll[func]) ) {
+            if ( e3.isFuncof(func,e3.scroll) ) {
               e3.scroll[func](e3.win.scrollTop());
             }
           }
@@ -176,7 +179,7 @@
     attach: function(settings, context) {
       !function() {
         for (var func in e3.behaviors) {
-          if ( _.isFunction(e3.behaviors[func]) ) {
+          if ( e3.isFuncof(e3.behaviors[func]) ) {
             (e3.behaviors[func])(settings,context);
           }
         }
