@@ -87,11 +87,9 @@
     // On the passed object, call each of its own functions.
     callEach: function(bundle) {
       for (func in bundle) {
-        if (bundle.hasOwnProperty(func)) {
-          if (e3.isFuncOf(func, bundle)) {
-            var args = [].slice.call(arguments,1);
-            bundle[func].apply(args);
-          }
+        if (bundle.hasOwnProperty(func) && e3.isFuncOf(func, bundle)) {
+          var args = [].slice.call(arguments,1);
+          bundle[func].apply(bundle, args);
         }
       }
     },
@@ -141,19 +139,19 @@
 
     e3.win.click(
       _.throttle((function(e) {
-        !function() { e3.callEach(e3.click, e.toElement, e); }();
+        return function() { e3.callEach(e3.click, e.toElement, e); };
       }), 100)
     );
 
     e3.win.resize(
       _.throttle((function() {
-        !function() { e3.callEach(e3.resize, e3.win.width(), e3.win.height()); }();
+        return function() { e3.callEach(e3.resize, e3.win.width(), e3.win.height()); };
       }), 250)
     );
 
     e3.win.scroll(
       _.throttle((function() {
-        !function() { e3.callEach(e3.scroll, e3.win.scrollTop()); }();
+        return function() { e3.callEach(e3.scroll, e3.win.scrollTop()); };
       }), 200)
     );
   });
