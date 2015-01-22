@@ -9,9 +9,10 @@
  * Implements hook_init().
  */
 function e3_js_init() {
+  $env = variable_get('e3_js_prod', '0');
 
   // Decide whether to use the production version.
-  if($env = variable_get('e3_js_prod', '0')) {
+  if(!is_null($env)) {
     switch($env) {
       case 0:
         $script = 'e3_js.js';
