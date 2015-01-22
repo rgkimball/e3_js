@@ -17,7 +17,7 @@
 
   window.e3 = {
 
-    version: '0.2.2',
+    version: '0.3.0',
 
     win: $(window),
     doc: $(document),
@@ -25,24 +25,16 @@
     // These should match whatever is defined in _base.scss:
     breakpoints: [460,768,960,1280],
 
-    // Populate this object with general event-based functions
-    // This prevents bogging down the page with multiple function calls
-    // and other mistakes, like having multiple resize handlers
-
-    load: {
-      // Leave empty; we call each function in this object once on page load
-      // Add to it with e3.load.myFunction
-    },
-
+    // Leave each of these objects empty. They are called sequentially below
+    // You can queue a function using e3.{object}.myFunc()
+    //   This prevents bogging down the page with multiple function calls
+    //   and other mistakes, like having multiple resize handlers
+    load: {},
     behaviors: {},
-
-    click: function(element) {},
-
-    resize: function(width, height) {},
-
-    scroll: function(distance) {},
-
-    delay: function(time) {},
+    click: {},
+    resize: {},
+    scroll: {},
+    delay: {},
 
     // Helper functions
     url: function(int) {
@@ -84,7 +76,7 @@
       }
     },
 
-    // On the passed object, call each of its own functions.
+    // Call bundle's own functions.
     callEach: function(bundle) {
       for (func in bundle) {
         if (bundle.hasOwnProperty(func) && e3.isFuncOf(func, bundle)) {
@@ -94,10 +86,11 @@
       }
     },
 
-    // _.isFunction wrapper
+    // Checks if object is a function.
     isFuncOf: function(func, parent) {
-      return _.isFunction(parent[func]);
+      return Object.prototype.toString.call(parent[func]) === '[object Function]';
     }
+
   };
 
   // Shortcut vars
@@ -133,33 +126,125 @@
     // prefixed with the Drupal object
 
     !function() {
-      _.once(e3.callEach(e3.load));
-      _.once(e3.callEach(e3.resize, e3.win.width(), e3.win.height()));
+      once(e3.callEach(e3.load));
+      var width = e3.win.width(), height = e3.win.height();
+      once(e3.callEach(e3.resize, width, height));
     }(); // Runs all load, resize and scroll functions once
 
     e3.win.click(
-      _.throttle((function(e) {
-        return function() { e3.callEach(e3.click, e.toElement, e); };
+      throttle((function(e) {
+        e3.callEach(e3.click, e.toElement, e);
       }), 100)
     );
 
     e3.win.resize(
-      _.throttle((function() {
-        return function() { e3.callEach(e3.resize, e3.win.width(), e3.win.height()); };
+      throttle((function() {
+        e3.callEach(e3.resize, e3.win.width(), e3.win.height());
       }), 250)
     );
 
     e3.win.scroll(
-      _.throttle((function() {
-        return function() { e3.callEach(e3.scroll, e3.win.scrollTop()); };
+      throttle((function() {
+        e3.callEach(e3.scroll, e3.win.scrollTop());
       }), 200)
     );
   });
 
   Drupal.behaviors.e3 = {
     attach: function(settings, context) {
-      !function() { e3.callEach(e3.behaviors, settings, context); }();
+      !function() {
+        e3.callEach(e3.behaviors, settings, context);
+      }();
     }
   };
+
+  // The following functions, throttle, once, and dependencies are borrowed from
+  // underscore.js: @see https://github.com/jashkenas/underscore
+
+  // Reusable constructor function for prototype setting.
+  var Ctor = function(){};
+
+  // Determines whether to execute a function as a constructor
+  // or a normal function with the provided arguments
+  var executeBound = function(sourceFunc, boundFunc, context, callingContext, args) {
+    if (!(callingContext instanceof boundFunc)) return sourceFunc.apply(context, args);
+    var self = baseCreate(sourceFunc.prototype);
+    var result = sourceFunc.apply(self, args);
+    if (isObject(result)) return result;
+    return self;
+  };
+
+  var isObject = function(obj) {
+    var type = typeof obj;
+    return type === 'function' || type === 'object' && !!obj;
+  }
+
+  // For creating a new object that inherits from another.
+  var baseCreate = function(prototype) {
+    if (!isObject(prototype)) return {};
+    if (Object.create) return Object.create(prototype);
+    Ctor.prototype = prototype;
+    var result = new Ctor;
+    Ctor.prototype = null;
+    return result;
+  };
+
+  var partial = function(func) {
+    var boundArgs = Array.prototype.slice.call(arguments, 1);
+    return function bound() {
+      var position = 0;
+      var args = boundArgs.slice();
+      for (var i = 0, length = args.length; i < length; i++) {
+        args[i] = arguments[position++]; // assume valid.
+      }
+      while (position < arguments.length) args.push(arguments[position++]);
+      return executeBound(func, bound, this, this, args);
+    };
+  };
+
+  var throttle = function(func, wait, options) {
+    var context, args, result;
+    var timeout = null;
+    var previous = 0;
+    var now = e3.time;
+    if (!options) options = {};
+    var later = function() {
+      previous = options.leading === false ? 0 : now;
+      timeout = null;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    };
+    return function() {
+      if (!previous && options.leading === false) previous = now;
+      var remaining = wait - (now - previous);
+      context = this;
+      args = arguments;
+      if (remaining <= 0 || remaining > wait) {
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
+        }
+        previous = now;
+        result = func.apply(context, args);
+        if (!timeout) context = args = null;
+      } else if (!timeout && options.trailing !== false) {
+        timeout = setTimeout(later, remaining);
+      }
+      return result;
+    };
+  }
+
+  var before = function(times, func) {
+    var memo;
+    return function() {
+      if (--times > 0) {
+        memo = func.apply(this, arguments);
+      }
+      if (times <= 1) func = null;
+      return memo;
+    };
+  };
+
+  var once = partial(before, 2);
 
 }(jQuery, Drupal, this, this.document);

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file e3_js.module
- * Loads underscore, creates e3_js config, loads correct version of e3_js
+ * Creates e3_js config, loads correct version of js
  */
 
 
@@ -30,14 +30,6 @@ function e3_js_init() {
   if (variable_get('e3_js_admin') || arg(0) != 'admin') {
 
     $js_path = drupal_get_path('module', 'e3_js') . '/' . $script;
-
-    drupal_add_js(libraries_get_path('underscore') . '/underscore.js',
-      array(
-        'weight' => -100,
-        'scope' => 'header',
-        'preprocess' => true
-      ), 'setting'
-    );
 
     drupal_add_js($js_path,
       array(
